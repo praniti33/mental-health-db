@@ -4,312 +4,288 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MindBloom — Mental Health Tracker</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fraunces:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
-  :root {
-    --pink:    #FF6B9D;
-    --purple:  #A855F7;
-    --blue:    #3B82F6;
-    --teal:    #14B8A6;
-    --yellow:  #FBBF24;
-    --orange:  #F97316;
-    --green:   #22C55E;
-    --bg:      #0F0A1E;
-    --surface: #1A1333;
-    --card:    #221A3A;
-    --border:  rgba(255,255,255,0.08);
-    --text:    #F1ECF9;
-    --muted:   #9D8FC4;
-  }
+:root {
+  --rose:    #F43F5E;
+  --rose-l:  #FFF1F2;
+  --rose-m:  #FECDD3;
+  --teal:    #0D9488;
+  --teal-l:  #F0FDFA;
+  --teal-m:  #99F6E4;
+  --amber:   #F59E0B;
+  --amber-l: #FFFBEB;
+  --purple:  #7C3AED;
+  --purple-l:#F5F3FF;
+  --blue:    #3B82F6;
+  --blue-l:  #EFF6FF;
+  --green:   #10B981;
+  --green-l: #ECFDF5;
+  --bg:      #F8F7F4;
+  --white:   #FFFFFF;
+  --card:    #FFFFFF;
+  --border:  #E8E4DF;
+  --text:    #1C1917;
+  --muted:   #78716C;
+  --light:   #A8A29E;
+  --shadow:  0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,0.07), 0 4px 6px rgba(0,0,0,0.04);
+}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin:0; padding:0; box-sizing:border-box; }
 
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
 
-  /* Animated background blobs */
-  body::before {
-    content: '';
-    position: fixed;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(168,85,247,0.15) 0%, transparent 70%);
-    top: -200px; left: -200px;
-    border-radius: 50%;
-    pointer-events: none;
-    animation: blob 8s ease-in-out infinite;
-  }
-  body::after {
-    content: '';
-    position: fixed;
-    width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(255,107,157,0.12) 0%, transparent 70%);
-    bottom: -150px; right: -150px;
-    border-radius: 50%;
-    pointer-events: none;
-    animation: blob 10s ease-in-out infinite reverse;
-  }
-  @keyframes blob { 0%,100%{transform:scale(1) translate(0,0)} 50%{transform:scale(1.1) translate(20px,20px)} }
+/* ── NAV ── */
+nav {
+  position: fixed; top:0; left:0; right:0;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; height: 60px;
+  box-shadow: var(--shadow);
+}
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px; font-weight: 700;
+  color: var(--rose); display: flex; align-items: center; gap: 8px;
+}
+.nav-links { display: flex; gap: 2px; }
+.nav-btn {
+  background: none; border: none; color: var(--muted);
+  font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500;
+  padding: 7px 14px; border-radius: 8px; cursor: pointer; transition: all 0.15s;
+}
+.nav-btn:hover { color: var(--text); background: var(--bg); }
+.nav-btn.active { color: var(--rose); background: var(--rose-l); font-weight: 600; }
+.nav-user { display:flex; align-items:center; gap:10px; font-size:14px; }
+.nav-avatar {
+  width:34px; height:34px; border-radius:10px;
+  background: linear-gradient(135deg, var(--rose), var(--purple));
+  display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:700; color:white;
+}
+.nav-points { font-size:13px; color:var(--amber); font-weight:700; background:var(--amber-l); padding:4px 10px; border-radius:20px; }
+#auth-btn {
+  background: var(--rose); color:white; border:none; border-radius:10px;
+  padding:8px 18px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600;
+  cursor:pointer; transition:opacity 0.15s;
+}
+#auth-btn:hover { opacity:0.88; }
+#logout-btn {
+  background:none; border:1px solid var(--border); border-radius:8px;
+  padding:6px 12px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500;
+  color:var(--muted); cursor:pointer; transition:all 0.15s;
+}
+#logout-btn:hover { border-color:var(--rose); color:var(--rose); }
 
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0;
-    background: rgba(15,10,30,0.85);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-    z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 32px; height: 64px;
-  }
-  .nav-logo {
-    font-family: 'Fraunces', serif;
-    font-size: 22px;
-    background: linear-gradient(135deg, var(--pink), var(--purple));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    font-weight: 700;
-  }
-  .nav-links { display: flex; gap: 4px; }
-  .nav-btn {
-    background: none; border: none;
-    color: var(--muted); font-family: 'Nunito', sans-serif;
-    font-size: 14px; font-weight: 700;
-    padding: 8px 16px; border-radius: 10px;
-    cursor: pointer; transition: all 0.2s;
-  }
-  .nav-btn:hover { color: var(--text); background: var(--border); }
-  .nav-btn.active { color: var(--text); background: rgba(168,85,247,0.2); }
-  .nav-user {
-    display: flex; align-items: center; gap: 10px;
-    font-size: 14px; font-weight: 700; color: var(--muted);
-  }
-  .nav-avatar {
-    width: 36px; height: 36px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--pink), var(--purple));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 900; color: white;
-  }
-  #login-nav-btn {
-    background: linear-gradient(135deg, var(--pink), var(--purple));
-    color: white; border: none; border-radius: 10px;
-    padding: 8px 20px; font-family: 'Nunito', sans-serif;
-    font-size: 14px; font-weight: 800; cursor: pointer;
-    transition: opacity 0.2s;
-  }
-  #login-nav-btn:hover { opacity: 0.85; }
+/* ── PAGES ── */
+.page { display:none; padding:76px 32px 48px; max-width:1100px; margin:0 auto; }
+.page.active { display:block; animation: fadeUp 0.25s ease; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
 
-  /* ── PAGES ── */
-  .page { display: none; padding: 88px 32px 40px; max-width: 1200px; margin: 0 auto; }
-  .page.active { display: block; animation: fadeIn 0.3s ease; }
-  @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+/* ── LANDING ── */
+#landing-page {
+  display:none; max-width:100%; padding:0;
+}
+#landing-page.active { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; padding:32px; }
+.landing-hero { text-align:center; max-width:560px; }
+.landing-hero h1 { font-family:'Playfair Display',serif; font-size:52px; line-height:1.15; color:var(--text); margin-bottom:16px; }
+.landing-hero h1 span { color:var(--rose); }
+.landing-hero p { font-size:17px; color:var(--muted); line-height:1.7; margin-bottom:36px; }
+.landing-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+.btn-hero-primary { background:var(--rose); color:white; border:none; border-radius:12px; padding:14px 32px; font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 14px rgba(244,63,94,0.3); }
+.btn-hero-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(244,63,94,0.4); }
+.btn-hero-secondary { background:white; color:var(--text); border:1px solid var(--border); border-radius:12px; padding:14px 32px; font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600; cursor:pointer; transition:all 0.2s; }
+.btn-hero-secondary:hover { border-color:var(--muted); }
+.landing-features { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; max-width:700px; margin:48px auto 0; }
+.feature-pill { background:white; border:1px solid var(--border); border-radius:14px; padding:16px 20px; text-align:center; box-shadow:var(--shadow); }
+.feature-pill .icon { font-size:24px; margin-bottom:8px; }
+.feature-pill p { font-size:13px; color:var(--muted); font-weight:500; }
 
-  /* ── CARDS ── */
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 24px;
-  }
+/* ── CARDS ── */
+.card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:24px; box-shadow:var(--shadow); }
 
-  /* ── STAT CARDS ── */
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 16px; margin-bottom: 24px; }
-  .stat-card {
-    border-radius: 20px; padding: 20px 24px;
-    display: flex; flex-direction: column; gap: 4px;
-    position: relative; overflow: hidden;
-  }
-  .stat-card::after {
-    content: attr(data-emoji);
-    position: absolute; right: 16px; top: 50%;
-    transform: translateY(-50%);
-    font-size: 32px; opacity: 0.4;
-  }
-  .stat-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; }
-  .stat-value { font-size: 32px; font-weight: 900; font-family: 'Fraunces', serif; }
-  .stat-sub { font-size: 12px; opacity: 0.6; }
-  .s-pink   { background: linear-gradient(135deg, rgba(255,107,157,0.25), rgba(255,107,157,0.1)); border: 1px solid rgba(255,107,157,0.3); }
-  .s-purple { background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(168,85,247,0.1)); border: 1px solid rgba(168,85,247,0.3); }
-  .s-teal   { background: linear-gradient(135deg, rgba(20,184,166,0.25), rgba(20,184,166,0.1)); border: 1px solid rgba(20,184,166,0.3); }
-  .s-yellow { background: linear-gradient(135deg, rgba(251,191,36,0.25), rgba(251,191,36,0.1)); border: 1px solid rgba(251,191,36,0.3); }
+/* ── STAT CARDS ── */
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:20px; }
+.stat-card { border-radius:14px; padding:18px 20px; position:relative; overflow:hidden; }
+.stat-card::after { content:attr(data-emoji); position:absolute; right:14px; top:50%; transform:translateY(-50%); font-size:28px; opacity:0.25; }
+.stat-label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:6px; }
+.stat-value { font-size:28px; font-weight:700; font-family:'Playfair Display',serif; line-height:1; }
+.stat-sub { font-size:12px; margin-top:4px; opacity:0.65; }
+.s-rose   { background:var(--rose-l);   border:1px solid var(--rose-m);   color:var(--rose); }
+.s-teal   { background:var(--teal-l);   border:1px solid var(--teal-m);   color:var(--teal); }
+.s-amber  { background:var(--amber-l);  border:1px solid #FDE68A;         color:var(--amber); }
+.s-purple { background:var(--purple-l); border:1px solid #DDD6FE;         color:var(--purple); }
+.s-blue   { background:var(--blue-l);   border:1px solid #BFDBFE;         color:var(--blue); }
+.s-green  { background:var(--green-l);  border:1px solid #A7F3D0;         color:var(--green); }
 
-  /* ── FORMS ── */
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .form-group { display: flex; flex-direction: column; gap: 8px; }
-  .form-group.full { grid-column: 1 / -1; }
-  label { font-size: 13px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-  input, select, textarea {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid var(--border);
-    border-radius: 12px; color: var(--text);
-    font-family: 'Nunito', sans-serif;
-    font-size: 15px; font-weight: 600;
-    padding: 12px 16px; outline: none;
-    transition: border-color 0.2s;
-    width: 100%;
-  }
-  input:focus, select:focus, textarea:focus { border-color: var(--purple); }
-  select option { background: var(--card); }
-  textarea { resize: vertical; min-height: 80px; }
+/* ── SECTION HEADERS ── */
+.section-header { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:18px; }
+.section-title { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; }
+.section-sub { font-size:13px; color:var(--muted); margin-top:3px; }
 
-  .btn {
-    border: none; border-radius: 14px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 15px; font-weight: 800;
-    padding: 13px 28px; cursor: pointer;
-    transition: all 0.2s;
-  }
-  .btn-primary {
-    background: linear-gradient(135deg, var(--pink), var(--purple));
-    color: white;
-  }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(168,85,247,0.4); }
-  .btn-secondary { background: var(--border); color: var(--text); }
-  .btn-secondary:hover { background: rgba(255,255,255,0.12); }
-  .btn-teal { background: linear-gradient(135deg, var(--teal), var(--blue)); color: white; }
-  .btn-teal:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(20,184,166,0.4); }
+/* ── FORMS ── */
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.form-group { display:flex; flex-direction:column; gap:6px; }
+.form-group.full { grid-column:1/-1; }
+label { font-size:12px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; }
+input, select, textarea {
+  background:var(--bg); border:1.5px solid var(--border); border-radius:10px;
+  color:var(--text); font-family:'DM Sans',sans-serif; font-size:14px; font-weight:500;
+  padding:10px 14px; outline:none; transition:border-color 0.15s; width:100%;
+}
+input:focus, select:focus, textarea:focus { border-color:var(--rose); background:white; }
+textarea { resize:vertical; min-height:80px; }
 
-  /* ── SECTION HEADERS ── */
-  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-  .section-title { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 700; }
-  .section-sub { color: var(--muted); font-size: 14px; font-weight: 600; margin-top: 2px; }
+.btn { border:none; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600; padding:11px 22px; cursor:pointer; transition:all 0.15s; }
+.btn-primary { background:var(--rose); color:white; }
+.btn-primary:hover { background:#E11D48; }
+.btn-teal { background:var(--teal); color:white; }
+.btn-teal:hover { background:#0F766E; }
+.btn-amber { background:var(--amber); color:white; }
+.btn-amber:hover { background:#D97706; }
+.btn-ghost { background:none; border:1.5px solid var(--border); color:var(--muted); }
+.btn-ghost:hover { border-color:var(--rose); color:var(--rose); }
+.btn-sm { padding:6px 12px; font-size:12px; border-radius:7px; }
+.btn-danger { background:#FFF1F2; color:var(--rose); border:1px solid var(--rose-m); }
+.btn-danger:hover { background:var(--rose); color:white; }
 
-  /* ── USERS TABLE ── */
-  .users-grid { display: grid; gap: 12px; }
-  .user-row {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 16px; padding: 16px 20px;
-    display: flex; align-items: center; gap: 16px;
-    cursor: pointer; transition: all 0.2s;
-  }
-  .user-row:hover { border-color: rgba(168,85,247,0.4); transform: translateX(4px); }
-  .user-avatar {
-    width: 48px; height: 48px; border-radius: 14px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; font-weight: 900; color: white; flex-shrink: 0;
-  }
-  .user-info { flex: 1; }
-  .user-name { font-size: 16px; font-weight: 800; }
-  .user-email { font-size: 13px; color: var(--muted); font-weight: 600; }
-  .user-stats { display: flex; gap: 20px; align-items: center; }
-  .user-stat { text-align: center; }
-  .user-stat-val { font-size: 18px; font-weight: 900; }
-  .user-stat-lbl { font-size: 11px; color: var(--muted); font-weight: 700; text-transform: uppercase; }
-  .mood-pill {
-    padding: 4px 12px; border-radius: 20px;
-    font-size: 13px; font-weight: 800;
-  }
+/* ── USER ROWS ── */
+.users-grid { display:grid; gap:10px; }
+.user-row {
+  background:white; border:1px solid var(--border); border-radius:14px;
+  padding:14px 18px; display:flex; align-items:center; gap:14px;
+  cursor:pointer; transition:all 0.15s; box-shadow:var(--shadow);
+}
+.user-row:hover { border-color:var(--rose-m); box-shadow:var(--shadow-md); transform:translateX(2px); }
+.user-avatar { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:700; color:white; flex-shrink:0; }
+.user-info { flex:1; }
+.user-name { font-size:15px; font-weight:700; }
+.user-email { font-size:12px; color:var(--muted); }
+.user-chips { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.chip { padding:4px 10px; border-radius:20px; font-size:12px; font-weight:600; }
+.chip-rose   { background:var(--rose-l);   color:var(--rose); }
+.chip-teal   { background:var(--teal-l);   color:var(--teal); }
+.chip-amber  { background:var(--amber-l);  color:var(--amber); }
+.chip-purple { background:var(--purple-l); color:var(--purple); }
 
-  /* ── CHARTS ── */
-  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
-  .chart-wrap { position: relative; height: 200px; }
+/* ── MOOD PICKER ── */
+.mood-picker { display:flex; gap:8px; }
+.mood-btn {
+  flex:1; background:var(--bg); border:2px solid var(--border); border-radius:12px;
+  padding:12px 8px; cursor:pointer; transition:all 0.15s; text-align:center;
+}
+.mood-btn:hover { border-color:var(--rose-m); background:var(--rose-l); }
+.mood-btn.selected { border-color:var(--rose); background:var(--rose-l); }
+.mood-btn .emoji { font-size:24px; display:block; margin-bottom:4px; }
+.mood-btn .label { font-size:11px; font-weight:700; color:var(--muted); }
+.mood-btn.selected .label { color:var(--rose); }
 
-  /* ── POSTS ── */
-  .posts-grid { display: grid; gap: 14px; }
-  .post-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 16px; padding: 18px 20px;
-  }
-  .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-  .post-author-avatar {
-    width: 36px; height: 36px; border-radius: 10px;
-    background: linear-gradient(135deg, var(--teal), var(--blue));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 800; color: white;
-  }
-  .post-author { font-size: 14px; font-weight: 800; }
-  .post-time { font-size: 12px; color: var(--muted); margin-left: auto; }
-  .post-content { font-size: 15px; line-height: 1.6; color: var(--text); }
-  .anon-badge {
-    font-size: 11px; font-weight: 800;
-    background: rgba(251,191,36,0.2); color: var(--yellow);
-    border: 1px solid rgba(251,191,36,0.3);
-    padding: 2px 8px; border-radius: 6px;
-  }
+/* ── CHECKLIST ── */
+.checklist-item {
+  display:flex; align-items:center; gap:12px;
+  padding:12px 16px; background:white; border:1px solid var(--border);
+  border-radius:12px; margin-bottom:8px; cursor:pointer; transition:all 0.15s;
+}
+.checklist-item:hover { border-color:var(--teal-m); }
+.checklist-item.done { background:var(--teal-l); border-color:var(--teal-m); }
+.checklist-item .task-icon { font-size:20px; }
+.checklist-item .task-name { font-size:14px; font-weight:600; flex:1; }
+.checklist-item.done .task-name { color:var(--teal); text-decoration:line-through; }
+.check-box {
+  width:22px; height:22px; border-radius:6px; border:2px solid var(--border);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+  transition:all 0.15s;
+}
+.checklist-item.done .check-box { background:var(--teal); border-color:var(--teal); }
 
-  /* ── BADGES ── */
-  .badges-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 14px; }
-  .badge-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 18px; padding: 20px 16px;
-    text-align: center; transition: all 0.2s;
-  }
-  .badge-card.earned { border-color: rgba(251,191,36,0.5); background: rgba(251,191,36,0.05); }
-  .badge-card.earned:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(251,191,36,0.2); }
-  .badge-icon { font-size: 36px; margin-bottom: 10px; }
-  .badge-name { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
-  .badge-desc { font-size: 12px; color: var(--muted); line-height: 1.4; }
-  .badge-locked { opacity: 0.4; filter: grayscale(1); }
-  .badge-pts { font-size: 11px; font-weight: 800; color: var(--yellow); margin-top: 6px; }
+/* ── JOURNAL ENTRIES ── */
+.journal-card { background:white; border:1px solid var(--border); border-radius:14px; padding:16px 18px; margin-bottom:10px; box-shadow:var(--shadow); }
+.journal-date { font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; }
+.journal-text { font-size:14px; line-height:1.7; color:var(--text); }
 
-  /* ── MOOD EMOJI PICKER ── */
-  .mood-picker { display: flex; gap: 10px; flex-wrap: wrap; }
-  .mood-emoji-btn {
-    background: rgba(255,255,255,0.05); border: 2px solid transparent;
-    border-radius: 14px; padding: 10px 14px;
-    cursor: pointer; font-size: 22px; transition: all 0.15s;
-    display: flex; flex-direction: column; align-items: center; gap: 4px;
-  }
-  .mood-emoji-btn span { font-size: 11px; font-weight: 800; color: var(--muted); }
-  .mood-emoji-btn:hover { border-color: var(--purple); background: rgba(168,85,247,0.1); }
-  .mood-emoji-btn.selected { border-color: var(--pink); background: rgba(255,107,157,0.15); }
+/* ── BADGES ── */
+.badges-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; }
+.badge-card { background:white; border:1.5px solid var(--border); border-radius:14px; padding:18px 14px; text-align:center; transition:all 0.2s; }
+.badge-card.earned { border-color:#FDE68A; background:var(--amber-l); box-shadow:0 0 0 3px #FEF3C7; }
+.badge-card.earned:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(245,158,11,0.2); }
+.badge-card.locked { opacity:0.45; filter:grayscale(0.8); }
+.badge-icon { font-size:32px; margin-bottom:8px; }
+.badge-name { font-size:13px; font-weight:700; color:var(--text); margin-bottom:4px; }
+.badge-desc { font-size:11px; color:var(--muted); line-height:1.4; }
+.badge-status { font-size:11px; font-weight:700; margin-top:6px; color:var(--amber); }
 
-  /* ── LEADERBOARD ── */
-  .rank-1 { background: linear-gradient(135deg, rgba(251,191,36,0.2), rgba(251,191,36,0.05)) !important; border-color: rgba(251,191,36,0.4) !important; }
-  .rank-2 { background: linear-gradient(135deg, rgba(148,163,184,0.2), rgba(148,163,184,0.05)) !important; border-color: rgba(148,163,184,0.3) !important; }
-  .rank-3 { background: linear-gradient(135deg, rgba(249,115,22,0.2), rgba(249,115,22,0.05)) !important; border-color: rgba(249,115,22,0.3) !important; }
-  .rank-badge { font-size: 20px; width: 32px; text-align: center; flex-shrink: 0; }
+/* ── CHARTS ── */
+.charts-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.chart-wrap { height:180px; position:relative; }
 
-  /* ── MODAL ── */
-  .modal-overlay {
-    display: none; position: fixed; inset: 0;
-    background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
-    z-index: 200; align-items: center; justify-content: center;
-  }
-  .modal-overlay.open { display: flex; }
-  .modal {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 24px; padding: 32px; width: 90%; max-width: 440px;
-    animation: slideUp 0.3s ease;
-  }
-  @keyframes slideUp { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
-  .modal-title { font-family: 'Fraunces', serif; font-size: 22px; margin-bottom: 20px; }
-  .modal-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
-  .modal-tab {
-    flex: 1; padding: 10px; border-radius: 12px;
-    background: var(--border); border: none; color: var(--muted);
-    font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800;
-    cursor: pointer; transition: all 0.2s;
-  }
-  .modal-tab.active { background: linear-gradient(135deg, var(--pink), var(--purple)); color: white; }
-  .modal-close {
-    float: right; background: none; border: none; color: var(--muted);
-    font-size: 24px; cursor: pointer; line-height: 1;
-  }
-  .msg { padding: 10px 14px; border-radius: 10px; font-size: 14px; font-weight: 700; margin-top: 12px; display: none; }
-  .msg.success { background: rgba(34,197,94,0.15); color: var(--green); border: 1px solid rgba(34,197,94,0.3); display: block; }
-  .msg.error { background: rgba(255,107,107,0.15); color: #FF6B6B; border: 1px solid rgba(255,107,107,0.3); display: block; }
+/* ── LEADERBOARD ── */
+.lb-row { display:flex; align-items:center; gap:14px; padding:12px 16px; background:white; border:1px solid var(--border); border-radius:12px; margin-bottom:8px; box-shadow:var(--shadow); }
+.lb-rank { font-size:18px; width:28px; text-align:center; }
+.lb-info { flex:1; }
+.lb-name { font-size:14px; font-weight:700; }
+.lb-badges { font-size:12px; color:var(--muted); }
+.lb-points { font-size:16px; font-weight:700; color:var(--amber); }
+.lb-row.rank-1 { background:linear-gradient(135deg,#FFFBEB,#FEF9C3); border-color:#FDE68A; }
+.lb-row.rank-2 { background:linear-gradient(135deg,#F8FAFC,#F1F5F9); border-color:#CBD5E1; }
+.lb-row.rank-3 { background:linear-gradient(135deg,#FFF7ED,#FFEDD5); border-color:#FED7AA; }
 
-  /* ── USER DETAIL ── */
-  #user-detail-page .back-btn {
-    background: none; border: none; color: var(--muted);
-    font-family: 'Nunito', sans-serif; font-size: 14px; font-weight: 800;
-    cursor: pointer; margin-bottom: 20px; display: flex; align-items: center; gap: 6px;
-    padding: 0;
-  }
-  #user-detail-page .back-btn:hover { color: var(--text); }
+/* ── INACTIVE USERS ── */
+.inactive-row { display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:white; border:1px solid var(--border); border-radius:12px; margin-bottom:8px; }
+.inactive-days { font-size:13px; font-weight:700; color:var(--rose); background:var(--rose-l); padding:4px 10px; border-radius:20px; }
 
-  /* ── RESPONSIVE ── */
-  @media (max-width: 640px) {
-    .form-grid { grid-template-columns: 1fr; }
-    .charts-grid { grid-template-columns: 1fr; }
-    .user-stats { gap: 12px; }
-    nav { padding: 0 16px; }
-    .page { padding: 80px 16px 32px; }
-  }
+/* ── MODAL ── */
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); backdrop-filter:blur(4px); z-index:200; align-items:center; justify-content:center; }
+.modal-overlay.open { display:flex; }
+.modal { background:white; border-radius:20px; padding:28px; width:90%; max-width:400px; box-shadow:var(--shadow-lg); animation:slideUp 0.25s ease; }
+@keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+.modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+.modal-title { font-family:'Playfair Display',serif; font-size:20px; }
+.modal-close { background:none; border:none; font-size:22px; cursor:pointer; color:var(--muted); line-height:1; }
+.modal-tabs { display:flex; gap:6px; margin-bottom:18px; background:var(--bg); border-radius:10px; padding:4px; }
+.modal-tab { flex:1; padding:8px; border-radius:8px; background:none; border:none; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; transition:all 0.15s; }
+.modal-tab.active { background:white; color:var(--text); box-shadow:var(--shadow); }
+
+/* ── MESSAGES ── */
+.msg { padding:10px 14px; border-radius:10px; font-size:13px; font-weight:600; margin-top:10px; display:none; }
+.msg.success { background:var(--green-l); color:var(--green); border:1px solid #A7F3D0; display:block; }
+.msg.error { background:var(--rose-l); color:var(--rose); border:1px solid var(--rose-m); display:block; }
+
+/* ── TABS ── */
+.tab-bar { display:flex; gap:4px; background:var(--bg); border-radius:10px; padding:4px; margin-bottom:20px; width:fit-content; }
+.tab { padding:8px 18px; border-radius:8px; background:none; border:none; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; color:var(--muted); cursor:pointer; transition:all 0.15s; }
+.tab.active { background:white; color:var(--text); box-shadow:var(--shadow); }
+
+/* ── ADMIN ALERT ── */
+.admin-banner { background:linear-gradient(135deg,#EFF6FF,#DBEAFE); border:1px solid #BFDBFE; border-radius:12px; padding:12px 16px; margin-bottom:20px; font-size:13px; font-weight:600; color:var(--blue); display:flex; align-items:center; gap:8px; }
+
+/* ── BACK BTN ── */
+.back-btn { background:none; border:none; color:var(--muted); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600; cursor:pointer; padding:0 0 16px; display:flex; align-items:center; gap:6px; }
+.back-btn:hover { color:var(--rose); }
+
+/* ── POINT TOAST ── */
+.toast { position:fixed; bottom:24px; right:24px; background:white; border:1px solid var(--border); border-radius:12px; padding:12px 18px; box-shadow:var(--shadow-lg); font-size:14px; font-weight:600; display:none; z-index:300; animation:slideUp 0.3s ease; }
+.toast.show { display:block; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px) {
+  .form-grid { grid-template-columns:1fr; }
+  .charts-grid { grid-template-columns:1fr; }
+  nav { padding:0 16px; }
+  .page { padding:70px 16px 32px; }
+  .mood-picker { flex-wrap:wrap; }
+  .landing-features { grid-template-columns:1fr; }
+}
 </style>
 </head>
 <body>
@@ -317,337 +293,346 @@
 <!-- NAV -->
 <nav>
   <div class="nav-logo">🌸 MindBloom</div>
-  <div class="nav-links" id="nav-links">
-    <button class="nav-btn active" onclick="showPage('dashboard')">Dashboard</button>
-    <button class="nav-btn" onclick="showPage('users')">Users</button>
-    <button class="nav-btn" onclick="showPage('track')">Track</button>
-    <button class="nav-btn" onclick="showPage('insights')">Insights</button>
-    <button class="nav-btn" onclick="showPage('posts')">Community</button>
-    <button class="nav-btn" onclick="showPage('badges')">Badges</button>
+  <div class="nav-links" id="nav-links" style="display:none">
+    <button class="nav-btn" id="nav-dashboard" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="nav-btn" id="nav-track"     onclick="showPage('track')">Track</button>
+    <button class="nav-btn" id="nav-insights"  onclick="showPage('insights')">Insights</button>
+    <button class="nav-btn" id="nav-leaderboard" onclick="showPage('leaderboard')">Leaderboard</button>
+    <button class="nav-btn" id="nav-badges"    onclick="showPage('badges')">Badges</button>
+    <!-- Admin only -->
+    <button class="nav-btn" id="nav-admin-users"    onclick="showPage('admin-users')"    style="display:none">Users</button>
+    <button class="nav-btn" id="nav-admin-analytics" onclick="showPage('admin-analytics')" style="display:none">Analytics</button>
+    <button class="nav-btn" id="nav-admin-inactive"  onclick="showPage('admin-inactive')"  style="display:none">Inactive</button>
   </div>
-  <div id="nav-right">
-    <button id="login-nav-btn" onclick="openModal()">Sign In</button>
+  <div id="nav-right" style="display:flex;align-items:center;gap:10px">
+    <button id="auth-btn" onclick="openModal()">Sign In</button>
   </div>
 </nav>
 
-<!-- ── DASHBOARD PAGE ── -->
-<div class="page active" id="dashboard-page">
-  <div class="section-header">
-    <div>
-      <div class="section-title">Good vibes only ✨</div>
-      <div class="section-sub">Here's how everyone's doing this week</div>
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════════════
+     LANDING PAGE
+══════════════════════════════════════════════ -->
+<div class="page active" id="landing-page">
+  <div class="landing-hero">
+    <h1>Track your mind,<br><span>bloom every day</span></h1>
+    <p>A secure, private space to log your mood, sleep, and daily habits — with insights that actually help you understand yourself.</p>
+    <div class="landing-btns">
+      <button class="btn-hero-primary" onclick="openModal('register')">Get Started Free</button>
+      <button class="btn-hero-secondary" onclick="openModal('login')">Sign In</button>
     </div>
+  </div>
+  <div class="landing-features">
+    <div class="feature-pill"><div class="icon">😊</div><p>Mood Tracking</p></div>
+    <div class="feature-pill"><div class="icon">😴</div><p>Sleep Logs</p></div>
+    <div class="feature-pill"><div class="icon">📝</div><p>Journal</p></div>
+    <div class="feature-pill"><div class="icon">✅</div><p>Daily Checklist</p></div>
+    <div class="feature-pill"><div class="icon">📈</div><p>Weekly Insights</p></div>
+    <div class="feature-pill"><div class="icon">🏅</div><p>Badges & Points</p></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     USER DASHBOARD
+══════════════════════════════════════════════ -->
+<div class="page" id="dashboard-page">
+  <div class="section-header" style="margin-bottom:20px">
+    <div>
+      <div class="section-title" id="dash-greeting">Good morning 🌸</div>
+      <div class="section-sub">Here's your wellness snapshot</div>
+    </div>
+    <div class="nav-points" id="dash-points">⭐ 0 pts</div>
+  </div>
+
+  <!-- Today's checklist preview -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="section-header" style="margin-bottom:14px">
+      <div style="font-weight:700;font-size:15px">✅ Today's Checklist</div>
+      <button class="btn btn-ghost btn-sm" onclick="showPage('track');switchTab('checklist-tab','track-tabs')">View All</button>
+    </div>
+    <div id="dash-checklist"></div>
   </div>
 
   <div class="stats-grid">
-    <div class="stat-card s-pink" data-emoji="👥">
-      <div class="stat-label">Total Users</div>
-      <div class="stat-value" id="stat-users">—</div>
-      <div class="stat-sub">in the community</div>
-    </div>
-    <div class="stat-card s-purple" data-emoji="😊">
+    <div class="stat-card s-rose" data-emoji="😊">
       <div class="stat-label">Avg Mood</div>
-      <div class="stat-value" id="stat-mood">—</div>
-      <div class="stat-sub">out of 10 this week</div>
+      <div class="stat-value" id="dash-mood">—</div>
+      <div class="stat-sub">this week (1–5)</div>
     </div>
     <div class="stat-card s-teal" data-emoji="😴">
       <div class="stat-label">Avg Sleep</div>
-      <div class="stat-value" id="stat-sleep">—</div>
+      <div class="stat-value" id="dash-sleep">—</div>
       <div class="stat-sub">hours per night</div>
     </div>
-    <div class="stat-card s-yellow" data-emoji="📝">
+    <div class="stat-card s-amber" data-emoji="📝">
       <div class="stat-label">Mood Logs</div>
-      <div class="stat-value" id="stat-logs">—</div>
-      <div class="stat-sub">entries this week</div>
+      <div class="stat-value" id="dash-logs">—</div>
+      <div class="stat-sub">this week</div>
+    </div>
+    <div class="stat-card s-purple" data-emoji="🙏">
+      <div class="stat-label">Journals</div>
+      <div class="stat-value" id="dash-journals">—</div>
+      <div class="stat-sub">this week</div>
     </div>
   </div>
 
-  <!-- Leaderboard -->
-  <div class="card">
-    <div class="section-header" style="margin-bottom:16px">
-      <div>
-        <div class="section-title" style="font-size:18px">🏆 Leaderboard</div>
-        <div class="section-sub">Top users by wellness points</div>
-      </div>
+  <div class="charts-grid" style="margin-top:16px">
+    <div class="card">
+      <div style="font-weight:700;font-size:14px;margin-bottom:12px">Mood This Week</div>
+      <div class="chart-wrap"><canvas id="dashMoodChart"></canvas></div>
     </div>
-    <div class="users-grid" id="leaderboard-list"></div>
+    <div class="card">
+      <div style="font-weight:700;font-size:14px;margin-bottom:12px">Sleep This Week</div>
+      <div class="chart-wrap"><canvas id="dashSleepChart"></canvas></div>
+    </div>
   </div>
 </div>
 
-<!-- ── USERS PAGE ── -->
-<div class="page" id="users-page">
-  <div class="section-header">
-    <div>
-      <div class="section-title">All Users 👥</div>
-      <div class="section-sub">Click a user to see their detailed stats</div>
-    </div>
-    <button class="btn btn-primary" onclick="openModal()">+ Add User</button>
-  </div>
-  <div class="users-grid" id="users-list"></div>
-</div>
-
-<!-- ── USER DETAIL PAGE ── -->
-<div class="page" id="user-detail-page">
-  <button class="back-btn" onclick="showPage('users')">← Back to Users</button>
-  <div id="user-detail-content"></div>
-</div>
-
-<!-- ── TRACK PAGE ── -->
+<!-- ══════════════════════════════════════════════
+     TRACK PAGE
+══════════════════════════════════════════════ -->
 <div class="page" id="track-page">
   <div class="section-header">
-    <div>
-      <div class="section-title">Daily Tracker 📊</div>
-      <div class="section-sub">Log your mood, sleep, activity and gratitude</div>
-    </div>
+    <div><div class="section-title">Daily Tracker</div><div class="section-sub">Log your wellbeing</div></div>
   </div>
 
-  <!-- User selector -->
-  <div class="card" style="margin-bottom:20px">
-    <div class="form-group">
-      <label>Who's logging?</label>
-      <select id="track-user-select">
-        <option value="">Select a user...</option>
-      </select>
-    </div>
+  <div class="tab-bar" id="track-tabs">
+    <button class="tab active" id="mood-tab"      onclick="switchTab('mood-tab','track-tabs')">😊 Mood</button>
+    <button class="tab"        id="sleep-tab"     onclick="switchTab('sleep-tab','track-tabs')">😴 Sleep</button>
+    <button class="tab"        id="journal-tab"   onclick="switchTab('journal-tab','track-tabs')">📝 Journal</button>
+    <button class="tab"        id="checklist-tab" onclick="switchTab('checklist-tab','track-tabs')">✅ Checklist</button>
   </div>
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-    <!-- Mood -->
-    <div class="card">
-      <div class="section-title" style="font-size:16px;margin-bottom:16px">😊 Mood Log</div>
-      <div class="form-group" style="margin-bottom:16px">
-        <label>How are you feeling? (tap one)</label>
-        <div class="mood-picker">
-          <button class="mood-emoji-btn" onclick="selectMood(1, this)">😢<span>1</span></button>
-          <button class="mood-emoji-btn" onclick="selectMood(2, this)">😔<span>2</span></button>
-          <button class="mood-emoji-btn" onclick="selectMood(3, this)">😕<span>3</span></button>
-          <button class="mood-emoji-btn" onclick="selectMood(4, this)">😐<span>4</span></button>
-          <button class="mood-emoji-btn" onclick="selectMood(5, this)">🙂<span>5</span></button>
-          <button class="mood-emoji-btn" onclick="selectMood(6, this)">😊<span>6</span></button>
-          <button class="mood-emoji-btn" onclick="selectMood(7, this)">😄<span>7</span></button>
-          <button class="mood-emoji-btn" onclick="selectMood(8, this)">😁<span>8</span></button>
-          <button class="mood-emoji-btn" onclick="selectMood(9, this)">🤩<span>9</span></button>
-          <button class="mood-emoji-btn" onclick="selectMood(10, this)">🥳<span>10</span></button>
-        </div>
+  <!-- Mood Panel -->
+  <div id="panel-mood-tab">
+    <div class="card" style="margin-bottom:14px">
+      <div style="font-weight:700;margin-bottom:14px">How are you feeling today?</div>
+      <div class="mood-picker" id="mood-picker">
+        <button class="mood-btn" onclick="selectMood(1,this)"><span class="emoji">😢</span><span class="label">Awful</span></button>
+        <button class="mood-btn" onclick="selectMood(2,this)"><span class="emoji">😕</span><span class="label">Bad</span></button>
+        <button class="mood-btn" onclick="selectMood(3,this)"><span class="emoji">😐</span><span class="label">Okay</span></button>
+        <button class="mood-btn" onclick="selectMood(4,this)"><span class="emoji">😊</span><span class="label">Good</span></button>
+        <button class="mood-btn" onclick="selectMood(5,this)"><span class="emoji">🤩</span><span class="label">Amazing</span></button>
       </div>
-      <div class="form-group" style="margin-bottom:16px">
+      <div class="form-group" style="margin-top:14px">
         <label>Notes (optional)</label>
-        <textarea id="mood-notes" placeholder="How's your day going?"></textarea>
+        <textarea id="mood-notes" placeholder="What's on your mind?"></textarea>
       </div>
-      <button class="btn btn-primary" style="width:100%" onclick="logMood()">Log Mood ✨</button>
+      <button class="btn btn-primary" style="width:100%;margin-top:12px" onclick="logMood()">Log Mood +5pts</button>
       <div class="msg" id="mood-msg"></div>
     </div>
-
-    <!-- Sleep -->
+    <!-- Recent mood entries -->
     <div class="card">
-      <div class="section-title" style="font-size:16px;margin-bottom:16px">😴 Sleep Log</div>
-      <div class="form-group" style="margin-bottom:16px">
-        <label>Hours slept</label>
-        <input type="number" id="sleep-hours" min="0" max="24" step="0.5" placeholder="e.g. 7.5">
+      <div style="font-weight:700;margin-bottom:12px">Recent Entries</div>
+      <div id="mood-history"></div>
+    </div>
+  </div>
+
+  <!-- Sleep Panel -->
+  <div id="panel-sleep-tab" style="display:none">
+    <div class="card" style="margin-bottom:14px">
+      <div style="font-weight:700;margin-bottom:14px">Last night's sleep</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Hours slept</label>
+          <input type="number" id="sleep-hours" min="0" max="24" step="0.5" placeholder="e.g. 7.5">
+        </div>
+        <div class="form-group">
+          <label>Sleep quality</label>
+          <select id="sleep-quality">
+            <option value="5">⭐⭐⭐⭐⭐ Amazing</option>
+            <option value="4">⭐⭐⭐⭐ Good</option>
+            <option value="3" selected>⭐⭐⭐ Okay</option>
+            <option value="2">⭐⭐ Poor</option>
+            <option value="1">⭐ Terrible</option>
+          </select>
+        </div>
       </div>
-      <div class="form-group" style="margin-bottom:16px">
-        <label>Sleep quality</label>
-        <select id="sleep-quality">
-          <option value="5">⭐⭐⭐⭐⭐ Amazing</option>
-          <option value="4">⭐⭐⭐⭐ Good</option>
-          <option value="3" selected>⭐⭐⭐ Okay</option>
-          <option value="2">⭐⭐ Poor</option>
-          <option value="1">⭐ Terrible</option>
-        </select>
-      </div>
-      <button class="btn btn-teal" style="width:100%" onclick="logSleep()">Log Sleep 🌙</button>
+      <button class="btn btn-teal" style="width:100%;margin-top:12px" onclick="logSleep()">Log Sleep +5pts</button>
       <div class="msg" id="sleep-msg"></div>
     </div>
-
-    <!-- Activity -->
     <div class="card">
-      <div class="section-title" style="font-size:16px;margin-bottom:16px">🏃 Activity Log</div>
-      <div class="form-group" style="margin-bottom:16px">
-        <label>Activity type</label>
-        <select id="activity-type">
-          <option>Walking</option>
-          <option>Running</option>
-          <option>Yoga</option>
-          <option>Gym</option>
-          <option>Swimming</option>
-          <option>Cycling</option>
-          <option>Dancing</option>
-          <option>Meditation</option>
-          <option>Reading</option>
-          <option>Other</option>
-        </select>
-      </div>
-      <div class="form-group" style="margin-bottom:16px">
-        <label>Duration (minutes)</label>
-        <input type="number" id="activity-duration" min="1" placeholder="e.g. 30">
-      </div>
-      <button class="btn btn-primary" style="width:100%;background:linear-gradient(135deg,var(--orange),var(--yellow))" onclick="logActivity()">Log Activity 💪</button>
-      <div class="msg" id="activity-msg"></div>
+      <div style="font-weight:700;margin-bottom:12px">Recent Sleep Logs</div>
+      <div id="sleep-history"></div>
     </div>
+  </div>
 
-    <!-- Gratitude -->
-    <div class="card">
-      <div class="section-title" style="font-size:16px;margin-bottom:16px">🙏 Gratitude Journal</div>
-      <div class="form-group" style="margin-bottom:16px">
-        <label>What are you grateful for today?</label>
-        <textarea id="gratitude-content" placeholder="I'm grateful for..." style="min-height:120px"></textarea>
+  <!-- Journal Panel -->
+  <div id="panel-journal-tab" style="display:none">
+    <div class="card" style="margin-bottom:14px">
+      <div style="font-weight:700;margin-bottom:14px">Write in your journal</div>
+      <div class="form-group">
+        <label>Today's entry</label>
+        <textarea id="journal-content" placeholder="What happened today? How are you feeling?" style="min-height:140px"></textarea>
       </div>
-      <button class="btn btn-primary" style="width:100%;background:linear-gradient(135deg,var(--green),var(--teal))" onclick="logGratitude()">Log Gratitude 💚</button>
-      <div class="msg" id="gratitude-msg"></div>
+      <button class="btn btn-amber" style="width:100%;margin-top:12px" onclick="logJournal()">Save Journal +10pts</button>
+      <div class="msg" id="journal-msg"></div>
+    </div>
+    <div class="card">
+      <div style="font-weight:700;margin-bottom:12px">Past Entries</div>
+      <div id="journal-history"></div>
+    </div>
+  </div>
+
+  <!-- Checklist Panel -->
+  <div id="panel-checklist-tab" style="display:none">
+    <div class="card">
+      <div style="font-weight:700;margin-bottom:4px">Today's Checklist</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:16px">Each completed task earns +3 points</div>
+      <div id="checklist-items"></div>
+      <div class="msg" id="checklist-msg"></div>
     </div>
   </div>
 </div>
 
-<!-- ── INSIGHTS PAGE ── -->
+<!-- ══════════════════════════════════════════════
+     INSIGHTS PAGE
+══════════════════════════════════════════════ -->
 <div class="page" id="insights-page">
   <div class="section-header">
-    <div>
-      <div class="section-title">Weekly Insights 📈</div>
-      <div class="section-sub">Select a user to see their weekly data</div>
+    <div><div class="section-title">Weekly Insights 📈</div><div class="section-sub">Your last 7 days at a glance</div></div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat-card s-rose" data-emoji="😊"><div class="stat-label">Avg Mood</div><div class="stat-value" id="ins-mood">—</div><div class="stat-sub">out of 5</div></div>
+    <div class="stat-card s-teal" data-emoji="😴"><div class="stat-label">Avg Sleep</div><div class="stat-value" id="ins-sleep">—</div><div class="stat-sub">hours/night</div></div>
+    <div class="stat-card s-amber" data-emoji="📝"><div class="stat-label">Mood Logs</div><div class="stat-value" id="ins-logs">—</div><div class="stat-sub">this week</div></div>
+    <div class="stat-card s-purple" data-emoji="✅"><div class="stat-label">Tasks Done</div><div class="stat-value" id="ins-tasks">—</div><div class="stat-sub">checklist completions</div></div>
+  </div>
+  <div class="charts-grid" style="margin-top:16px">
+    <div class="card">
+      <div style="font-weight:700;font-size:14px;margin-bottom:12px">Mood Trend</div>
+      <div class="chart-wrap"><canvas id="insMoodChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div style="font-weight:700;font-size:14px;margin-bottom:12px">Sleep Trend</div>
+      <div class="chart-wrap"><canvas id="insSleepChart"></canvas></div>
     </div>
   </div>
-
-  <div class="card" style="margin-bottom:20px">
-    <div class="form-group">
-      <label>View insights for</label>
-      <select id="insights-user-select" onchange="loadInsights()">
-        <option value="">Select a user...</option>
-      </select>
-    </div>
-  </div>
-
-  <div id="insights-content" style="display:none">
-    <div class="stats-grid" style="margin-bottom:20px">
-      <div class="stat-card s-pink" data-emoji="😊">
-        <div class="stat-label">Avg Mood</div>
-        <div class="stat-value" id="ins-mood">—</div>
-        <div class="stat-sub">this week</div>
-      </div>
-      <div class="stat-card s-teal" data-emoji="😴">
-        <div class="stat-label">Avg Sleep</div>
-        <div class="stat-value" id="ins-sleep">—</div>
-        <div class="stat-sub">hours/night</div>
-      </div>
-      <div class="stat-card s-yellow" data-emoji="🏃">
-        <div class="stat-label">Activities</div>
-        <div class="stat-value" id="ins-activity">—</div>
-        <div class="stat-sub">logged this week</div>
-      </div>
-      <div class="stat-card s-purple" data-emoji="🙏">
-        <div class="stat-label">Gratitude</div>
-        <div class="stat-value" id="ins-gratitude">—</div>
-        <div class="stat-sub">entries this week</div>
-      </div>
-    </div>
-
-    <div class="charts-grid">
-      <div class="card">
-        <div style="font-weight:800;margin-bottom:16px">Mood This Week</div>
-        <div class="chart-wrap"><canvas id="moodChart"></canvas></div>
-      </div>
-      <div class="card">
-        <div style="font-weight:800;margin-bottom:16px">Sleep This Week</div>
-        <div class="chart-wrap"><canvas id="sleepChart"></canvas></div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-top:20px">
-      <div style="font-weight:800;margin-bottom:12px">💡 Weekly Summary</div>
-      <div id="insight-summary" style="color:var(--muted);line-height:1.8;font-size:15px"></div>
-    </div>
+  <div class="card" style="margin-top:16px">
+    <div style="font-weight:700;margin-bottom:10px">💡 Weekly Summary</div>
+    <div id="ins-summary" style="color:var(--muted);font-size:14px;line-height:1.8"></div>
   </div>
 </div>
 
-<!-- ── POSTS PAGE ── -->
-<div class="page" id="posts-page">
+<!-- ══════════════════════════════════════════════
+     LEADERBOARD PAGE
+══════════════════════════════════════════════ -->
+<div class="page" id="leaderboard-page">
   <div class="section-header">
-    <div>
-      <div class="section-title">Community 💬</div>
-      <div class="section-sub">Anonymous peer support — you're not alone</div>
-    </div>
+    <div><div class="section-title">Leaderboard 🏆</div><div class="section-sub">Ranked by total wellness points</div></div>
   </div>
-
-  <div class="card" style="margin-bottom:20px">
-    <div class="section-title" style="font-size:16px;margin-bottom:16px">Share something 🌟</div>
-    <div class="form-group" style="margin-bottom:12px">
-      <label>Posting as</label>
-      <select id="post-user-select">
-        <option value="">Select a user...</option>
-      </select>
-    </div>
-    <div class="form-group" style="margin-bottom:12px">
-      <label>Your message</label>
-      <textarea id="post-content" placeholder="Share a tip, a feeling, or some encouragement..." style="min-height:100px"></textarea>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between">
-      <label style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--muted);cursor:pointer;text-transform:none;letter-spacing:0">
-        <input type="checkbox" id="post-anon" checked style="width:auto;accent-color:var(--purple)">
-        Post anonymously
-      </label>
-      <button class="btn btn-primary" onclick="submitPost()">Share Post 🚀</button>
-    </div>
-    <div class="msg" id="post-msg"></div>
-  </div>
-
-  <div class="posts-grid" id="posts-list"></div>
+  <div id="leaderboard-list"></div>
 </div>
 
-<!-- ── BADGES PAGE ── -->
+<!-- ══════════════════════════════════════════════
+     BADGES PAGE
+══════════════════════════════════════════════ -->
 <div class="page" id="badges-page">
   <div class="section-header">
-    <div>
-      <div class="section-title">Badges & Rewards 🏅</div>
-      <div class="section-sub">Select a user to see their earned badges</div>
-    </div>
-  </div>
-  <div class="card" style="margin-bottom:20px">
-    <div class="form-group">
-      <label>View badges for</label>
-      <select id="badges-user-select" onchange="loadBadges()">
-        <option value="">Select a user...</option>
-      </select>
-    </div>
+    <div><div class="section-title">Your Badges 🏅</div><div class="section-sub">Keep logging to earn more!</div></div>
   </div>
   <div class="badges-grid" id="badges-grid"></div>
 </div>
 
-<!-- ── LOGIN MODAL ── -->
+<!-- ══════════════════════════════════════════════
+     ADMIN — USERS
+══════════════════════════════════════════════ -->
+<div class="page" id="admin-users-page">
+  <div class="admin-banner">🔐 Admin View — You can see all users' data</div>
+  <div class="section-header">
+    <div><div class="section-title">All Users</div><div class="section-sub">Click a user to view their full profile</div></div>
+  </div>
+  <div class="users-grid" id="admin-users-list"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     ADMIN — USER DETAIL
+══════════════════════════════════════════════ -->
+<div class="page" id="admin-user-detail-page">
+  <button class="back-btn" onclick="showPage('admin-users')">← Back to Users</button>
+  <div id="admin-user-detail-content"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     ADMIN — ANALYTICS
+══════════════════════════════════════════════ -->
+<div class="page" id="admin-analytics-page">
+  <div class="admin-banner">🔐 Admin View — Combined analytics for all users</div>
+  <div class="section-header">
+    <div><div class="section-title">Combined Analytics</div><div class="section-sub">System-wide insights this week</div></div>
+  </div>
+  <div class="stats-grid" id="admin-stats-grid"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+    <div class="card">
+      <div style="font-weight:700;margin-bottom:12px">Sleep vs Mood Correlation</div>
+      <div id="correlation-list"></div>
+    </div>
+    <div class="card">
+      <div style="font-weight:700;margin-bottom:12px">Checklist Task Completion</div>
+      <div class="chart-wrap"><canvas id="activityChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     ADMIN — INACTIVE USERS
+══════════════════════════════════════════════ -->
+<div class="page" id="admin-inactive-page">
+  <div class="admin-banner">🔐 Admin View — Users with no activity in 3+ days</div>
+  <div class="section-header">
+    <div><div class="section-title">Inactive Users</div><div class="section-sub">Users who haven't logged recently</div></div>
+  </div>
+  <div id="inactive-list"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     AUTH MODAL
+══════════════════════════════════════════════ -->
 <div class="modal-overlay" id="modal">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal()">×</button>
-    <div class="modal-title">Welcome back 🌸</div>
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">Welcome back</div>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
     <div class="modal-tabs">
-      <button class="modal-tab active" onclick="switchTab('login')">Sign In</button>
-      <button class="modal-tab" onclick="switchTab('register')">Register</button>
+      <button class="modal-tab active" id="tab-login"    onclick="switchModalTab('login')">Sign In</button>
+      <button class="modal-tab"        id="tab-register" onclick="switchModalTab('register')">Register</button>
     </div>
 
+    <!-- Login -->
     <div id="login-form">
-      <div class="form-group" style="margin-bottom:12px">
+      <div class="form-group" style="margin-bottom:10px">
         <label>Username</label>
         <input type="text" id="login-username" placeholder="your username">
       </div>
-      <div class="form-group" style="margin-bottom:16px">
+      <div class="form-group" style="margin-bottom:14px">
         <label>Password</label>
         <input type="password" id="login-password" placeholder="••••••••">
       </div>
-      <button class="btn btn-primary" style="width:100%" onclick="login()">Sign In ✨</button>
+      <button class="btn btn-primary" style="width:100%" onclick="login()">Sign In</button>
       <div class="msg" id="login-msg"></div>
+      <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--muted)">
+        Admin: username <strong>admin</strong> / password <strong>password123</strong>
+      </div>
     </div>
 
+    <!-- Register -->
     <div id="register-form" style="display:none">
-      <div class="form-group" style="margin-bottom:12px">
+      <div class="form-group" style="margin-bottom:10px">
         <label>Username</label>
-        <input type="text" id="reg-username" placeholder="choose a username">
+        <input type="text" id="reg-username" placeholder="choose a username (min 3 chars)">
       </div>
-      <div class="form-group" style="margin-bottom:12px">
+      <div class="form-group" style="margin-bottom:10px">
         <label>Email</label>
         <input type="email" id="reg-email" placeholder="your@email.com">
       </div>
-      <div class="form-group" style="margin-bottom:16px">
+      <div class="form-group" style="margin-bottom:14px">
         <label>Password</label>
         <input type="password" id="reg-password" placeholder="••••••••">
       </div>
-      <button class="btn btn-primary" style="width:100%" onclick="register()">Create Account 🌟</button>
+      <button class="btn btn-primary" style="width:100%" onclick="register()">Create Account</button>
       <div class="msg" id="reg-msg"></div>
     </div>
   </div>
@@ -657,393 +642,538 @@
 const API = '';
 let currentUser = null;
 let selectedMood = null;
-let moodChartInst = null, sleepChartInst = null;
+let dashMoodChart = null, dashSleepChart = null, insMoodChart = null, insSleepChart = null, actChart = null;
 
-const BADGE_ICONS = ['🌱','⚔️','🌙','🙏','💪','⭐','🧘'];
 const AVATAR_COLORS = [
-  'linear-gradient(135deg,#FF6B9D,#A855F7)',
-  'linear-gradient(135deg,#3B82F6,#14B8A6)',
-  'linear-gradient(135deg,#FBBF24,#F97316)',
-  'linear-gradient(135deg,#22C55E,#14B8A6)',
-  'linear-gradient(135deg,#F97316,#FF6B9D)',
+  'linear-gradient(135deg,#F43F5E,#EC4899)',
+  'linear-gradient(135deg,#0D9488,#3B82F6)',
+  'linear-gradient(135deg,#F59E0B,#EF4444)',
+  'linear-gradient(135deg,#7C3AED,#EC4899)',
+  'linear-gradient(135deg,#10B981,#0D9488)',
 ];
+const TASK_ICONS = { 'Exercise':'🏃','Drink Water':'💧','Meditate':'🧘','Go Outside':'🌳','Social Interaction':'🤝' };
+const MOOD_LABELS = ['','😢 Awful','😕 Bad','😐 Okay','😊 Good','🤩 Amazing'];
 
-function moodColor(score) {
-  if (score >= 8) return '#22C55E';
-  if (score >= 6) return '#FBBF24';
-  if (score >= 4) return '#F97316';
-  return '#FF6B6B';
-}
-function moodEmoji(score) {
-  if (score >= 9) return '🤩';
-  if (score >= 7) return '😊';
-  if (score >= 5) return '🙂';
-  if (score >= 3) return '😕';
-  return '😢';
-}
-function timeAgo(dateStr) {
-  const diff = (Date.now() - new Date(dateStr)) / 1000;
-  if (diff < 60) return 'just now';
-  if (diff < 3600) return Math.floor(diff/60) + 'm ago';
-  if (diff < 86400) return Math.floor(diff/3600) + 'h ago';
-  return Math.floor(diff/86400) + 'd ago';
+function moodColor(s) { return s>=4?'#10B981':s>=3?'#F59E0B':s>=2?'#F97316':'#F43F5E'; }
+function timeAgo(d) {
+  const diff=(Date.now()-new Date(d))/1000;
+  if(diff<60) return 'just now';
+  if(diff<3600) return Math.floor(diff/60)+'m ago';
+  if(diff<86400) return Math.floor(diff/3600)+'h ago';
+  return Math.floor(diff/86400)+'d ago';
 }
 
 // ── PAGES ──
 function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(name + '-page').classList.add('active');
-  const btns = document.querySelectorAll('.nav-btn');
-  const pages = ['dashboard','users','track','insights','posts','badges'];
-  const idx = pages.indexOf(name);
-  if (idx >= 0 && btns[idx]) btns[idx].classList.add('active');
-  if (name === 'dashboard') loadDashboard();
-  if (name === 'users') loadUsers();
-  if (name === 'posts') loadPosts();
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const page = document.getElementById(name+'-page');
+  if(page) page.classList.add('active');
+  const btn = document.getElementById('nav-'+name);
+  if(btn) btn.classList.add('active');
+  if(name==='dashboard')        loadDashboard();
+  if(name==='track')            { loadMoodHistory(); loadSleepHistory(); loadJournalHistory(); loadChecklist(); }
+  if(name==='insights')         loadInsights();
+  if(name==='leaderboard')      loadLeaderboard();
+  if(name==='badges')           loadBadges();
+  if(name==='admin-users')      loadAdminUsers();
+  if(name==='admin-analytics')  loadAdminAnalytics();
+  if(name==='admin-inactive')   loadInactiveUsers();
+}
+
+// ── TABS ──
+function switchTab(activeId, groupId) {
+  const group = document.getElementById(groupId);
+  group.querySelectorAll('.tab').forEach(t=>{
+    t.classList.remove('active');
+    const panelId = 'panel-'+t.id;
+    const panel = document.getElementById(panelId);
+    if(panel) panel.style.display='none';
+  });
+  document.getElementById(activeId).classList.add('active');
+  const activePanel = document.getElementById('panel-'+activeId);
+  if(activePanel) activePanel.style.display='block';
 }
 
 // ── AUTH ──
-function openModal() { document.getElementById('modal').classList.add('open'); }
+function openModal(tab='login') {
+  document.getElementById('modal').classList.add('open');
+  switchModalTab(tab);
+}
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
-function switchTab(tab) {
-  document.querySelectorAll('.modal-tab').forEach((b,i) => b.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='register')));
-  document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
-  document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
+function switchModalTab(tab) {
+  document.getElementById('tab-login').classList.toggle('active', tab==='login');
+  document.getElementById('tab-register').classList.toggle('active', tab==='register');
+  document.getElementById('login-form').style.display    = tab==='login'    ? 'block':'none';
+  document.getElementById('register-form').style.display = tab==='register' ? 'block':'none';
+  document.getElementById('modal-title').textContent = tab==='login' ? 'Welcome back 🌸' : 'Create account 🌱';
 }
 
 async function login() {
   const username = document.getElementById('login-username').value;
   const password = document.getElementById('login-password').value;
-  const res = await fetch(`${API}/api/login`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({username, password}) });
+  const res = await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password})});
   const data = await res.json();
-  if (res.ok) {
+  if(res.ok) {
     currentUser = data.user;
-    showMsg('login-msg', 'Welcome back, ' + username + '! 🎉', 'success');
-    setTimeout(() => {
-      closeModal();
-      updateNavUser();
-      populateUserSelects();
-    }, 800);
+    closeModal();
+    setupForUser();
+    showMsg('login-msg','','');
   } else showMsg('login-msg', data.error, 'error');
 }
 
 async function register() {
   const username = document.getElementById('reg-username').value;
-  const email = document.getElementById('reg-email').value;
+  const email    = document.getElementById('reg-email').value;
   const password = document.getElementById('reg-password').value;
-  const res = await fetch(`${API}/api/register`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({username, email, password}) });
+  const res = await fetch('/api/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,email,password})});
   const data = await res.json();
-  if (res.ok) {
-    showMsg('reg-msg', 'Account created! 🌟 You earned your first badge!', 'success');
-    setTimeout(() => { switchTab('login'); loadUsers(); }, 1200);
-  } else showMsg('reg-msg', data.error, 'error');
+  if(res.ok) {
+    showMsg('reg-msg','Account created! Please sign in.','success');
+    setTimeout(()=>switchModalTab('login'),1200);
+  } else showMsg('reg-msg',data.error,'error');
 }
 
-function updateNavUser() {
-  if (!currentUser) return;
+function logout() {
+  currentUser = null;
+  document.getElementById('nav-links').style.display='none';
+  document.getElementById('nav-right').innerHTML='<button id="auth-btn" onclick="openModal()">Sign In</button>';
+  showPage('landing');
+  document.getElementById('landing-page').classList.add('active');
+}
+
+function setupForUser() {
+  const isAdmin = currentUser.role === 'admin';
+  document.getElementById('nav-links').style.display='flex';
+
+  // Show/hide nav items based on role
+  ['nav-dashboard','nav-track','nav-insights','nav-leaderboard','nav-badges'].forEach(id=>{
+    document.getElementById(id).style.display = isAdmin ? 'none' : 'block';
+  });
+  ['nav-admin-users','nav-admin-analytics','nav-admin-inactive'].forEach(id=>{
+    document.getElementById(id).style.display = isAdmin ? 'block' : 'none';
+  });
+
   document.getElementById('nav-right').innerHTML = `
-    <div class="nav-user">
+    <div style="display:flex;align-items:center;gap:10px">
+      ${!isAdmin ? `<span class="nav-points">⭐ ${currentUser.total_points} pts</span>` : '<span style="font-size:12px;font-weight:700;color:var(--blue);background:var(--blue-l);padding:4px 10px;border-radius:20px">🔐 Admin</span>'}
       <div class="nav-avatar">${currentUser.username[0].toUpperCase()}</div>
-      <span>${currentUser.username}</span>
-      <span style="color:var(--yellow);font-size:13px">⭐ ${currentUser.total_points}</span>
+      <button id="logout-btn" onclick="logout()">Log out</button>
     </div>`;
+
+  if(isAdmin) showPage('admin-users');
+  else showPage('dashboard');
 }
 
 // ── DASHBOARD ──
 async function loadDashboard() {
-  const res = await fetch(`${API}/api/stats`);
-  const s = await res.json();
-  document.getElementById('stat-users').textContent = s.total_users || 0;
-  document.getElementById('stat-mood').textContent = s.avg_mood_this_week || '—';
-  document.getElementById('stat-sleep').textContent = s.avg_sleep_this_week ? s.avg_sleep_this_week + 'h' : '—';
-  document.getElementById('stat-logs').textContent = s.moods_this_week || 0;
+  if(!currentUser) return;
+  const [analyticsRes, checklistRes] = await Promise.all([
+    fetch('/api/analytics/'+currentUser.user_id),
+    fetch('/api/checklist/'+currentUser.user_id)
+  ]);
+  const analytics = await analyticsRes.json();
+  const checklist = await checklistRes.json();
+  const s = analytics.stats;
 
-  const res2 = await fetch(`${API}/api/users`);
-  const users = await res2.json();
-  const top = users.slice(0, 5);
-  document.getElementById('leaderboard-list').innerHTML = top.map((u, i) => `
-    <div class="user-row ${i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':''}" onclick="viewUser(${u.user_id}, '${u.username}')">
-      <div class="rank-badge">${i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1)}</div>
-      <div class="user-avatar" style="background:${AVATAR_COLORS[i%5]}">${u.username[0].toUpperCase()}</div>
-      <div class="user-info">
-        <div class="user-name">${u.username}</div>
-        <div class="user-email">${u.badge_count} badge${u.badge_count!==1?'s':''} earned</div>
+  const hr = new Date().getHours();
+  const greeting = hr<12?'Good morning':'hr<17'?'Good afternoon':'Good evening';
+  document.getElementById('dash-greeting').textContent = (hr<12?'Good morning':'hr<18'?'Good afternoon':'Good evening')+' '+currentUser.username+' 🌸';
+  document.getElementById('dash-points').textContent = '⭐ '+currentUser.total_points+' pts';
+  document.getElementById('dash-mood').textContent    = s.avg_mood || '—';
+  document.getElementById('dash-sleep').textContent   = s.avg_sleep ? s.avg_sleep+'h' : '—';
+  document.getElementById('dash-logs').textContent    = s.mood_count || 0;
+  document.getElementById('dash-journals').textContent= s.journal_count || 0;
+
+  // Checklist preview
+  const done = checklist.filter(c=>c.completed).length;
+  document.getElementById('dash-checklist').innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-size:13px;color:var(--muted)">${done}/${checklist.length} tasks completed today</div>
+      <div style="font-size:13px;font-weight:700;color:${done===checklist.length?'var(--teal)':'var(--muted)'}">${done===checklist.length?'🎉 All done!':''}</div>
+    </div>
+    <div style="height:6px;background:var(--bg);border-radius:99px;overflow:hidden">
+      <div style="height:100%;width:${checklist.length?Math.round(done/checklist.length*100):0}%;background:var(--teal);border-radius:99px;transition:width 0.4s"></div>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:12px">
+      ${checklist.map(c=>`<span style="padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;background:${c.completed?'var(--teal-l)':'var(--bg)'};color:${c.completed?'var(--teal)':'var(--muted)'};border:1px solid ${c.completed?'var(--teal-m)':'var(--border)'}">
+        ${TASK_ICONS[c.task_name]||'✅'} ${c.task_name}
+      </span>`).join('')}
+    </div>`;
+
+  // Charts
+  const moodLabels = analytics.moodData.map(d=>new Date(d.date).toLocaleDateString('en',{weekday:'short'}));
+  const moodVals   = analytics.moodData.map(d=>parseFloat(d.avg_mood));
+  const sleepLabels= analytics.sleepData.map(d=>new Date(d.date).toLocaleDateString('en',{weekday:'short'}));
+  const sleepVals  = analytics.sleepData.map(d=>parseFloat(d.avg_sleep));
+
+  if(dashMoodChart)  dashMoodChart.destroy();
+  if(dashSleepChart) dashSleepChart.destroy();
+  dashMoodChart  = makeLineChart('dashMoodChart',  moodLabels,  moodVals,  '#F43F5E', 0, 5);
+  dashSleepChart = makeBarChart( 'dashSleepChart', sleepLabels, sleepVals, '#0D9488');
+}
+
+// ── TRACK ──
+function selectMood(score, btn) {
+  selectedMood = score;
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+
+async function logMood() {
+  if(!selectedMood) return showMsg('mood-msg','Please select a mood!','error');
+  const notes = document.getElementById('mood-notes').value;
+  const res = await fetch('/api/mood',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:currentUser.user_id,mood_score:selectedMood,notes})});
+  const data = await res.json();
+  if(res.ok) {
+    showMsg('mood-msg',data.message,'success');
+    showToast(data.message);
+    currentUser.total_points += 5;
+    updatePoints();
+    loadMoodHistory();
+  } else showMsg('mood-msg',data.error,'error');
+}
+
+async function logSleep() {
+  const hours = document.getElementById('sleep-hours').value;
+  const quality = document.getElementById('sleep-quality').value;
+  if(!hours) return showMsg('sleep-msg','Please enter hours slept','error');
+  const res = await fetch('/api/sleep',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:currentUser.user_id,hours_slept:hours,quality_score:quality})});
+  const data = await res.json();
+  if(res.ok) { showMsg('sleep-msg',data.message,'success'); showToast(data.message); currentUser.total_points+=5; updatePoints(); loadSleepHistory(); }
+  else showMsg('sleep-msg',data.error,'error');
+}
+
+async function logJournal() {
+  const content = document.getElementById('journal-content').value;
+  if(!content.trim()) return showMsg('journal-msg','Please write something!','error');
+  const res = await fetch('/api/journal',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({user_id:currentUser.user_id,content})});
+  const data = await res.json();
+  if(res.ok) { showMsg('journal-msg',data.message,'success'); showToast(data.message); currentUser.total_points+=10; updatePoints(); document.getElementById('journal-content').value=''; loadJournalHistory(); }
+  else showMsg('journal-msg',data.error,'error');
+}
+
+async function loadMoodHistory() {
+  if(!currentUser) return;
+  const res = await fetch('/api/mood/'+currentUser.user_id);
+  const data = await res.json();
+  document.getElementById('mood-history').innerHTML = data.length ? data.slice(0,8).map(m=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:22px">${['','😢','😕','😐','😊','🤩'][m.mood_score]}</span>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700;color:${moodColor(m.mood_score)}">${MOOD_LABELS[m.mood_score]}</div>
+        <div style="font-size:12px;color:var(--muted)">${m.notes||'No notes'}</div>
       </div>
-      <div class="user-stats">
-        <div class="user-stat">
-          <div class="user-stat-val" style="color:var(--yellow)">⭐ ${u.total_points}</div>
-          <div class="user-stat-lbl">Points</div>
-        </div>
-        ${u.latest_mood != null ? `<div class="mood-pill" style="background:${moodColor(u.latest_mood)}22;color:${moodColor(u.latest_mood)};border:1px solid ${moodColor(u.latest_mood)}44">
-          ${moodEmoji(u.latest_mood)} ${u.latest_mood}/10
-        </div>` : ''}
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:11px;color:var(--light)">${timeAgo(m.logged_at)}</span>
+        <button class="btn btn-danger btn-sm" onclick="deleteMood(${m.mood_id})">Delete</button>
       </div>
+    </div>`).join('') : '<div style="color:var(--muted);font-size:14px">No mood entries yet</div>';
+}
+
+async function deleteMood(id) {
+  await fetch('/api/mood/'+id,{method:'DELETE'});
+  loadMoodHistory();
+}
+
+async function loadSleepHistory() {
+  if(!currentUser) return;
+  const res = await fetch('/api/sleep/'+currentUser.user_id);
+  const data = await res.json();
+  document.getElementById('sleep-history').innerHTML = data.length ? data.slice(0,8).map(s=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:22px">😴</span>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700;color:var(--teal)">${parseFloat(s.hours_slept).toFixed(1)} hours</div>
+        <div style="font-size:12px;color:var(--muted)">Quality: ${'⭐'.repeat(s.quality_score)}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:11px;color:var(--light)">${timeAgo(s.logged_at)}</span>
+        <button class="btn btn-danger btn-sm" onclick="deleteSleep(${s.sleep_id})">Delete</button>
+      </div>
+    </div>`).join('') : '<div style="color:var(--muted);font-size:14px">No sleep logs yet</div>';
+}
+
+async function deleteSleep(id) {
+  await fetch('/api/sleep/'+id,{method:'DELETE'});
+  loadSleepHistory();
+}
+
+async function loadJournalHistory() {
+  if(!currentUser) return;
+  const res = await fetch('/api/journal/'+currentUser.user_id);
+  const data = await res.json();
+  document.getElementById('journal-history').innerHTML = data.length ? data.map(j=>`
+    <div class="journal-card">
+      <div style="display:flex;justify-content:space-between;align-items:start">
+        <div class="journal-date">${new Date(j.created_at).toLocaleDateString('en',{weekday:'long',month:'long',day:'numeric'})}</div>
+        <button class="btn btn-danger btn-sm" onclick="deleteJournal(${j.journal_id})">Delete</button>
+      </div>
+      <div class="journal-text">${j.content}</div>
+    </div>`).join('') : '<div style="color:var(--muted);font-size:14px">No journal entries yet</div>';
+}
+
+async function deleteJournal(id) {
+  await fetch('/api/journal/'+id,{method:'DELETE'});
+  loadJournalHistory();
+}
+
+async function loadChecklist() {
+  if(!currentUser) return;
+  const res = await fetch('/api/checklist/'+currentUser.user_id);
+  const data = await res.json();
+  document.getElementById('checklist-items').innerHTML = data.map(item=>`
+    <div class="checklist-item ${item.completed?'done':''}" onclick="toggleChecklist(${item.checklist_id},${!item.completed},this)">
+      <span class="task-icon">${TASK_ICONS[item.task_name]||'✅'}</span>
+      <span class="task-name">${item.task_name}</span>
+      <div class="check-box">${item.completed?'<span style="color:white;font-size:13px">✓</span>':''}</div>
     </div>`).join('');
 }
 
-// ── USERS ──
-async function loadUsers() {
-  const res = await fetch(`${API}/api/users`);
-  const users = await res.json();
-  document.getElementById('users-list').innerHTML = users.map((u, i) => `
-    <div class="user-row" onclick="viewUser(${u.user_id}, '${u.username}')">
+async function toggleChecklist(id, completed, el) {
+  const res = await fetch('/api/checklist/'+id,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({completed,user_id:currentUser.user_id})});
+  const data = await res.json();
+  if(res.ok) {
+    if(completed) { showToast(data.message); currentUser.total_points+=3; updatePoints(); }
+    loadChecklist();
+    loadDashboard();
+  }
+}
+
+// ── INSIGHTS ──
+async function loadInsights() {
+  if(!currentUser) return;
+  const res = await fetch('/api/analytics/'+currentUser.user_id);
+  const data = await res.json();
+  const s = data.stats;
+
+  document.getElementById('ins-mood').textContent  = s.avg_mood || '—';
+  document.getElementById('ins-sleep').textContent = s.avg_sleep ? s.avg_sleep+'h' : '—';
+  document.getElementById('ins-logs').textContent  = s.mood_count || 0;
+  const taskPct = s.checklist_total>0 ? Math.round(s.checklist_done/s.checklist_total*100)+'%' : '—';
+  document.getElementById('ins-tasks').textContent = taskPct;
+
+  const mL = data.moodData.map(d=>new Date(d.date).toLocaleDateString('en',{weekday:'short'}));
+  const mV = data.moodData.map(d=>parseFloat(d.avg_mood));
+  const sL = data.sleepData.map(d=>new Date(d.date).toLocaleDateString('en',{weekday:'short'}));
+  const sV = data.sleepData.map(d=>parseFloat(d.avg_sleep));
+
+  if(insMoodChart)  insMoodChart.destroy();
+  if(insSleepChart) insSleepChart.destroy();
+  insMoodChart  = makeLineChart('insMoodChart',  mL, mV, '#F43F5E', 0, 5);
+  insSleepChart = makeBarChart( 'insSleepChart', sL, sV, '#0D9488');
+
+  let summary = '';
+  const avgMood  = parseFloat(s.avg_mood)||0;
+  const avgSleep = parseFloat(s.avg_sleep)||0;
+  if(avgMood>=4)      summary += '😊 Your mood has been <strong>great</strong> this week! ';
+  else if(avgMood>=3) summary += '🙂 Your mood has been <strong>decent</strong> this week. ';
+  else                summary += '💙 Your mood has been a bit low — remember, every week is different. ';
+  if(avgSleep>=7.5)   summary += '😴 Excellent sleep! Keep it up. ';
+  else if(avgSleep>=6)summary += '😴 Your sleep is okay, try aiming for 7.5+ hours. ';
+  else if(avgSleep>0) summary += '😴 You might need more sleep — try going to bed 30 mins earlier. ';
+  if(s.mood_count>=5) summary += '📝 Great job logging consistently! ';
+  if(s.checklist_done>0) summary += '✅ You completed '+s.checklist_done+' checklist tasks this week! ';
+  document.getElementById('ins-summary').innerHTML = summary || 'Log more entries to see your weekly summary!';
+}
+
+// ── LEADERBOARD ──
+async function loadLeaderboard() {
+  const res = await fetch('/api/leaderboard');
+  const data = await res.json();
+  document.getElementById('leaderboard-list').innerHTML = data.map((u,i)=>`
+    <div class="lb-row ${i===0?'rank-1':i===1?'rank-2':i===2?'rank-3':''}">
+      <div class="lb-rank">${i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1)}</div>
+      <div class="user-avatar" style="width:38px;height:38px;font-size:14px;background:${AVATAR_COLORS[i%5]}">${u.username[0].toUpperCase()}</div>
+      <div class="lb-info">
+        <div class="lb-name">${u.username}</div>
+        <div class="lb-badges">🏅 ${u.badges_earned} badge${u.badges_earned!=1?'s':''}</div>
+      </div>
+      <div class="lb-points">⭐ ${u.total_points}</div>
+    </div>`).join('');
+}
+
+// ── BADGES ──
+async function loadBadges() {
+  if(!currentUser) return;
+  const res = await fetch('/api/badges/'+currentUser.user_id);
+  const data = await res.json();
+  document.getElementById('badges-grid').innerHTML = data.map(b=>`
+    <div class="badge-card ${b.earned?'earned':'locked'}">
+      <div class="badge-icon">${b.icon||'🏅'}</div>
+      <div class="badge-name">${b.badge_name}</div>
+      <div class="badge-desc">${b.description}</div>
+      <div class="badge-status">${b.earned?'✅ Earned!':'🔒 Locked'}</div>
+    </div>`).join('');
+}
+
+// ── ADMIN USERS ──
+async function loadAdminUsers() {
+  const res = await fetch('/api/admin/users');
+  const data = await res.json();
+  document.getElementById('admin-users-list').innerHTML = data.map((u,i)=>`
+    <div class="user-row" onclick="viewAdminUser(${u.user_id})">
       <div class="user-avatar" style="background:${AVATAR_COLORS[i%5]}">${u.username[0].toUpperCase()}</div>
       <div class="user-info">
         <div class="user-name">${u.username}</div>
         <div class="user-email">${u.email}</div>
       </div>
-      <div class="user-stats">
-        ${u.latest_mood != null ? `<div class="user-stat">
-          <div class="user-stat-val">${moodEmoji(u.latest_mood)} ${u.latest_mood}</div>
-          <div class="user-stat-lbl">Mood</div>
-        </div>` : ''}
-        ${u.latest_sleep != null ? `<div class="user-stat">
-          <div class="user-stat-val">😴 ${u.latest_sleep}h</div>
-          <div class="user-stat-lbl">Sleep</div>
-        </div>` : ''}
-        <div class="user-stat">
-          <div class="user-stat-val" style="color:var(--yellow)">⭐ ${u.total_points}</div>
-          <div class="user-stat-lbl">Points</div>
-        </div>
-        <div class="user-stat">
-          <div class="user-stat-val">🏅 ${u.badge_count}</div>
-          <div class="user-stat-lbl">Badges</div>
-        </div>
+      <div class="user-chips">
+        ${u.avg_mood!=null?`<span class="chip chip-rose">😊 ${u.avg_mood}/5</span>`:''}
+        ${u.avg_sleep!=null?`<span class="chip chip-teal">😴 ${u.avg_sleep}h</span>`:''}
+        <span class="chip chip-amber">⭐ ${u.total_points} pts</span>
+        <span class="chip chip-purple">🏅 ${u.badges_earned}</span>
       </div>
     </div>`).join('');
 }
 
-async function viewUser(userId, username) {
-  showPage('user-detail');
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-
-  const [moodRes, sleepRes, badgeRes] = await Promise.all([
-    fetch(`${API}/api/mood/${userId}`),
-    fetch(`${API}/api/sleep/${userId}`),
-    fetch(`${API}/api/badges/${userId}`)
-  ]);
-  const moods = await moodRes.json();
-  const sleeps = await sleepRes.json();
-  const badges = await badgeRes.json();
-  const earnedBadges = badges.filter(b => b.earned);
-  const avgMood = moods.length ? (moods.reduce((a,b) => a+b.mood_score,0)/moods.length).toFixed(1) : '—';
-const avgSleep = sleeps.length ? (sleeps.reduce((a,b) => a + parseFloat(b.hours_slept),0)/sleeps.length).toFixed(1) : '—';
-  document.getElementById('user-detail-content').innerHTML = `
-    <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px">
-      <div class="user-avatar" style="width:64px;height:64px;font-size:24px;border-radius:18px;background:${AVATAR_COLORS[userId%5]}">${username[0].toUpperCase()}</div>
+async function viewAdminUser(userId) {
+  showPage('admin-user-detail');
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const res = await fetch('/api/admin/user/'+userId);
+  const data = await res.json();
+  const u = data.user;
+  document.getElementById('admin-user-detail-content').innerHTML = `
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+      <div class="user-avatar" style="width:56px;height:56px;font-size:20px;border-radius:14px;background:${AVATAR_COLORS[userId%5]}">${u.username[0].toUpperCase()}</div>
       <div>
-        <div style="font-family:'Fraunces',serif;font-size:28px;font-weight:700">${username}</div>
-        <div style="color:var(--muted)">${earnedBadges.length} badges earned</div>
+        <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:700">${u.username}</div>
+        <div style="color:var(--muted);font-size:13px">${u.email} · Joined ${new Date(u.created_at).toLocaleDateString()}</div>
       </div>
     </div>
-    <div class="stats-grid" style="margin-bottom:20px">
-      <div class="stat-card s-pink" data-emoji="😊"><div class="stat-label">Avg Mood</div><div class="stat-value">${avgMood}</div></div>
-      <div class="stat-card s-teal" data-emoji="😴"><div class="stat-label">Avg Sleep</div><div class="stat-value">${avgSleep}h</div></div>
-      <div class="stat-card s-yellow" data-emoji="📝"><div class="stat-label">Total Logs</div><div class="stat-value">${moods.length}</div></div>
-      <div class="stat-card s-purple" data-emoji="🏅"><div class="stat-label">Badges</div><div class="stat-value">${earnedBadges.length}</div></div>
+    <div class="stats-grid" style="margin-bottom:16px">
+      <div class="stat-card s-rose" data-emoji="😊"><div class="stat-label">Avg Mood</div><div class="stat-value">${u.avg_mood||'—'}</div></div>
+      <div class="stat-card s-teal" data-emoji="😴"><div class="stat-label">Avg Sleep</div><div class="stat-value">${u.avg_sleep?u.avg_sleep+'h':'—'}</div></div>
+      <div class="stat-card s-amber" data-emoji="⭐"><div class="stat-label">Points</div><div class="stat-value">${u.total_points}</div></div>
+      <div class="stat-card s-purple" data-emoji="🏅"><div class="stat-label">Badges</div><div class="stat-value">${u.badges_earned}</div></div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
       <div class="card">
-        <div style="font-weight:800;margin-bottom:16px">Recent Mood Entries</div>
-        ${moods.slice(0,5).map(m => `
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
-            <div style="display:flex;align-items:center;gap:10px">
-              <span style="font-size:20px">${moodEmoji(m.mood_score)}</span>
-              <div>
-                <div style="font-weight:700;color:${moodColor(m.mood_score)}">${m.mood_score}/10</div>
-                <div style="font-size:12px;color:var(--muted)">${m.notes || 'No notes'}</div>
-              </div>
+        <div style="font-weight:700;margin-bottom:12px">Recent Mood Entries</div>
+        ${data.moods.slice(0,5).map(m=>`
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+            <span style="font-size:18px">${['','😢','😕','😐','😊','🤩'][m.mood_score]}</span>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:700;color:${moodColor(m.mood_score)}">${MOOD_LABELS[m.mood_score]}</div>
+              <div style="font-size:11px;color:var(--muted)">${m.notes||'No notes'}</div>
             </div>
-            <div style="font-size:12px;color:var(--muted)">${timeAgo(m.logged_at)}</div>
+            <span style="font-size:11px;color:var(--light)">${timeAgo(m.logged_at)}</span>
           </div>`).join('')}
       </div>
       <div class="card">
-        <div style="font-weight:800;margin-bottom:16px">Badges</div>
-        <div style="display:flex;flex-wrap:wrap;gap:10px">
-          ${earnedBadges.map((b,i) => `
-            <div title="${b.description}" style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:12px;padding:8px 12px;display:flex;align-items:center;gap:6px">
-              <span>${BADGE_ICONS[b.badge_id-1]||'🏅'}</span>
-              <span style="font-size:13px;font-weight:700">${b.name}</span>
-            </div>`).join('') || '<div style="color:var(--muted)">No badges yet</div>'}
-        </div>
+        <div style="font-weight:700;margin-bottom:12px">Journal Entries</div>
+        ${data.journals.length ? data.journals.slice(0,3).map(j=>`
+          <div class="journal-card" style="margin-bottom:8px">
+            <div class="journal-date">${new Date(j.created_at).toLocaleDateString()}</div>
+            <div class="journal-text" style="font-size:13px">${j.content.substring(0,120)}${j.content.length>120?'...':''}</div>
+          </div>`).join('') : '<div style="color:var(--muted);font-size:13px">No journal entries</div>'}
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-weight:700;margin-bottom:12px">Badges</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        ${data.badges.filter(b=>b.earned).map(b=>`
+          <span style="padding:6px 12px;border-radius:20px;background:var(--amber-l);border:1px solid #FDE68A;font-size:13px;font-weight:600">${b.icon} ${b.badge_name}</span>
+        `).join('') || '<span style="color:var(--muted);font-size:13px">No badges yet</span>'}
       </div>
     </div>`;
 }
 
-// ── POPULATE SELECTS ──
-async function populateUserSelects() {
-  const res = await fetch(`${API}/api/users`);
-  const users = await res.json();
-  const opts = users.map(u => `<option value="${u.user_id}">${u.username}</option>`).join('');
-  ['track-user-select','insights-user-select','badges-user-select','post-user-select'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = '<option value="">Select a user...</option>' + opts;
-  });
-}
-
-// ── TRACKING ──
-function selectMood(score, btn) {
-  selectedMood = score;
-  document.querySelectorAll('.mood-emoji-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-}
-
-async function logMood() {
-  const userId = document.getElementById('track-user-select').value;
-  if (!userId) return showMsg('mood-msg', 'Please select a user first!', 'error');
-  if (!selectedMood) return showMsg('mood-msg', 'Please select a mood!', 'error');
-  const notes = document.getElementById('mood-notes').value;
-  const res = await fetch(`${API}/api/mood`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({user_id:userId, mood_score:selectedMood, notes}) });
+// ── ADMIN ANALYTICS ──
+async function loadAdminAnalytics() {
+  const res = await fetch('/api/admin/analytics');
   const data = await res.json();
-  showMsg('mood-msg', res.ok ? data.message : data.error, res.ok ? 'success' : 'error');
-}
+  const o = data.overview;
 
-async function logSleep() {
-  const userId = document.getElementById('track-user-select').value;
-  if (!userId) return showMsg('sleep-msg', 'Please select a user first!', 'error');
-  const hours = document.getElementById('sleep-hours').value;
-  const quality = document.getElementById('sleep-quality').value;
-  if (!hours) return showMsg('sleep-msg', 'Please enter hours slept!', 'error');
-  const res = await fetch(`${API}/api/sleep`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({user_id:userId, hours_slept:hours, quality_score:quality}) });
-  const data = await res.json();
-  showMsg('sleep-msg', res.ok ? data.message : data.error, res.ok ? 'success' : 'error');
-}
+  document.getElementById('admin-stats-grid').innerHTML = `
+    <div class="stat-card s-blue"   data-emoji="👥"><div class="stat-label">Total Users</div><div class="stat-value">${o.total_users}</div></div>
+    <div class="stat-card s-rose"   data-emoji="😊"><div class="stat-label">Avg Mood</div><div class="stat-value">${o.avg_mood_week||'—'}</div><div class="stat-sub">this week</div></div>
+    <div class="stat-card s-teal"   data-emoji="😴"><div class="stat-label">Avg Sleep</div><div class="stat-value">${o.avg_sleep_week?o.avg_sleep_week+'h':'—'}</div><div class="stat-sub">this week</div></div>
+    <div class="stat-card s-amber"  data-emoji="📝"><div class="stat-label">Mood Logs</div><div class="stat-value">${o.mood_logs_week||0}</div><div class="stat-sub">this week</div></div>
+    <div class="stat-card s-purple" data-emoji="📓"><div class="stat-label">Journals</div><div class="stat-value">${o.journals_week||0}</div><div class="stat-sub">this week</div></div>
+    <div class="stat-card s-green"  data-emoji="✅"><div class="stat-label">Checklist Done</div><div class="stat-value">${o.checklist_done_week||0}</div><div class="stat-sub">this week</div></div>`;
 
-async function logActivity() {
-  const userId = document.getElementById('track-user-select').value;
-  if (!userId) return showMsg('activity-msg', 'Please select a user first!', 'error');
-  const type = document.getElementById('activity-type').value;
-  const duration = document.getElementById('activity-duration').value;
-  if (!duration) return showMsg('activity-msg', 'Please enter duration!', 'error');
-  const res = await fetch(`${API}/api/activity`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({user_id:userId, activity_type:type, duration_minutes:duration}) });
-  const data = await res.json();
-  showMsg('activity-msg', res.ok ? data.message : data.error, res.ok ? 'success' : 'error');
-}
-
-async function logGratitude() {
-  const userId = document.getElementById('track-user-select').value;
-  if (!userId) return showMsg('gratitude-msg', 'Please select a user first!', 'error');
-  const content = document.getElementById('gratitude-content').value;
-  if (!content) return showMsg('gratitude-msg', 'Please write something!', 'error');
-  const res = await fetch(`${API}/api/gratitude`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({user_id:userId, content}) });
-  const data = await res.json();
-  showMsg('gratitude-msg', res.ok ? data.message : data.error, res.ok ? 'success' : 'error');
-}
-
-// ── INSIGHTS ──
-async function loadInsights() {
-  const userId = document.getElementById('insights-user-select').value;
-  if (!userId) return;
-  const res = await fetch(`${API}/api/analytics/${userId}`);
-  const data = await res.json();
-  document.getElementById('insights-content').style.display = 'block';
-
-  const s = data.stats;
-  document.getElementById('ins-mood').textContent = data.stats.avg_mood??'-';
-  document.getElementById('ins-sleep').textContent = data.stats.avg_sleep ? data.stats.avg_sleep + 'h' : '—';
-  document.getElementById('ins-activity').textContent = s.activity_count || 0;
-  document.getElementById('ins-gratitude').textContent = s.gratitude_count || 0;
-
-  const moodLabels = data.moodData.map(d => new Date(d.date).toLocaleDateString('en',{weekday:'short'}));
-  const moodVals = data.moodData.map(d => parseFloat(d.avg_mood).toFixed(1));
-  const sleepLabels = data.sleepData.map(d => new Date(d.date).toLocaleDateString('en',{weekday:'short'}));
-  const sleepVals = data.sleepData.map(d => parseFloat(d.avg_sleep).toFixed(1));
-
-  if (moodChartInst) moodChartInst.destroy();
-  if (sleepChartInst) sleepChartInst.destroy();
-
-  const chartOpts = (color) => ({
-    responsive: true, maintainAspectRatio: false,
-    plugins: { legend: { display: false } },
-    scales: {
-      x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9D8FC4' } },
-      y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9D8FC4' } }
-    }
-  });
-
-  moodChartInst = new Chart(document.getElementById('moodChart'), {
-    type: 'line',
-    data: { labels: moodLabels, datasets: [{ data: moodVals, borderColor: '#FF6B9D', backgroundColor: 'rgba(255,107,157,0.1)', tension: 0.4, fill: true, pointBackgroundColor: '#FF6B9D', pointRadius: 5 }] },
-    options: { ...chartOpts('#FF6B9D'), scales: { ...chartOpts().scales, y: { ...chartOpts().scales?.y, min: 0, max: 10, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9D8FC4' } } } }
-  });
-  sleepChartInst = new Chart(document.getElementById('sleepChart'), {
-    type: 'bar',
-    data: { labels: sleepLabels, datasets: [{ data: sleepVals, backgroundColor: 'rgba(20,184,166,0.6)', borderColor: '#14B8A6', borderRadius: 8, borderWidth: 2 }] },
-    options: chartOpts('#14B8A6')
-  });
-
-  // Generate insight summary
-  const avgMood = parseFloat(s.avg_mood) || 0;
-  const avgSleep = parseFloat(s.avg_sleep) || 0;
-  let summary = '';
-  if (avgMood >= 7) summary += '😊 Your mood has been <strong>great</strong> this week! ';
-  else if (avgMood >= 5) summary += '🙂 Your mood has been <strong>decent</strong> this week. ';
-  else summary += '💙 Your mood has been a bit low — that\'s okay, every week is different. ';
-  if (avgSleep >= 7.5) summary += '😴 You\'re getting <strong>excellent sleep</strong> — keep it up! ';
-  else if (avgSleep >= 6) summary += '😴 Your sleep is <strong>okay</strong>, but try aiming for 7-8 hours. ';
-  else summary += '😴 You might need more sleep — try going to bed 30 mins earlier. ';
-  if (s.activity_count > 3) summary += '💪 You\'ve been <strong>very active</strong> this week! ';
-  if (s.gratitude_count > 0) summary += '🙏 Great job keeping up with <strong>gratitude journaling</strong>! ';
-  document.getElementById('insight-summary').innerHTML = summary;
-}
-
-// ── POSTS ──
-async function loadPosts() {
-  const res = await fetch(`${API}/api/posts`);
-  const posts = await res.json();
-  document.getElementById('posts-list').innerHTML = posts.map(p => `
-    <div class="post-card">
-      <div class="post-header">
-        <div class="post-author-avatar">${p.author[0].toUpperCase()}</div>
-        <div>
-          <div class="post-author">${p.author}</div>
-        </div>
-        ${p.is_anonymous ? '<span class="anon-badge">anonymous</span>' : ''}
-        <div class="post-time">${timeAgo(p.posted_at)}</div>
+  // Correlation table
+  document.getElementById('correlation-list').innerHTML = data.correlation.map(c=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div>
+        <div style="font-size:14px;font-weight:700">${c.sleep_category}</div>
+        <div style="font-size:12px;color:var(--muted)">${c.entries} data points</div>
       </div>
-      <div class="post-content">${p.content}</div>
+      <div style="font-size:16px;font-weight:700;color:${moodColor(c.avg_mood)}">😊 ${c.avg_mood}/5</div>
     </div>`).join('');
+
+  // Activity chart
+  if(actChart) actChart.destroy();
+  actChart = new Chart(document.getElementById('activityChart'), {
+    type: 'bar',
+    data: {
+      labels: data.activities.map(a=>a.task_name),
+      datasets: [{ data: data.activities.map(a=>a.rate), backgroundColor: '#0D9488', borderRadius: 8 }]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{
+      x:{grid:{display:false},ticks:{color:'#78716C',font:{size:11}}},
+      y:{grid:{color:'#F5F5F4'},ticks:{color:'#78716C'},max:100,title:{display:true,text:'% completed',color:'#78716C'}}
+    }}
+  });
 }
 
-async function submitPost() {
-  const userId = document.getElementById('post-user-select').value;
-  if (!userId) return showMsg('post-msg', 'Please select a user!', 'error');
-  const content = document.getElementById('post-content').value;
-  if (!content) return showMsg('post-msg', 'Please write something!', 'error');
-  const is_anonymous = document.getElementById('post-anon').checked;
-  const res = await fetch(`${API}/api/posts`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({user_id:userId, content, is_anonymous}) });
+// ── ADMIN INACTIVE ──
+async function loadInactiveUsers() {
+  const res = await fetch('/api/admin/inactive');
   const data = await res.json();
-  if (res.ok) { showMsg('post-msg', data.message, 'success'); document.getElementById('post-content').value = ''; loadPosts(); }
-  else showMsg('post-msg', data.error, 'error');
+  document.getElementById('inactive-list').innerHTML = data.length ? data.map((u,i)=>`
+    <div class="inactive-row">
+      <div class="user-avatar" style="width:40px;height:40px;font-size:14px;background:${AVATAR_COLORS[i%5]}">${u.username[0].toUpperCase()}</div>
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:700">${u.username}</div>
+        <div style="font-size:12px;color:var(--muted)">${u.email}</div>
+      </div>
+      <span class="inactive-days">${u.days_inactive!=null?u.days_inactive+' days inactive':'Never logged'}</span>
+    </div>`).join('') : '<div class="card" style="text-align:center;color:var(--teal);font-weight:600;padding:32px">🎉 All users have been active recently!</div>';
 }
 
-// ── BADGES ──
-async function loadBadges() {
-  const userId = document.getElementById('badges-user-select').value;
-  if (!userId) return;
-  const res = await fetch(`${API}/api/badges/${userId}`);
-  const badges = await res.json();
-  document.getElementById('badges-grid').innerHTML = badges.map((b, i) => `
-    <div class="badge-card ${b.earned ? 'earned' : 'badge-locked'}">
-      <div class="badge-icon">${BADGE_ICONS[i] || '🏅'}</div>
-      <div class="badge-name">${b.name}</div>
-      <div class="badge-desc">${b.description}</div>
-      <div class="badge-pts">${b.earned ? '✅ Earned!' : '⭐ ' + b.points_required + ' pts needed'}</div>
-    </div>`).join('');
+// ── CHART HELPERS ──
+const chartDefaults = {
+  responsive:true, maintainAspectRatio:false,
+  plugins:{legend:{display:false}},
+  scales:{
+    x:{grid:{display:false},ticks:{color:'#78716C',font:{size:11}}},
+    y:{grid:{color:'#F5F5F4'},ticks:{color:'#78716C'}}
+  }
+};
+function makeLineChart(id, labels, data, color, min, max) {
+  return new Chart(document.getElementById(id), {
+    type:'line',
+    data:{labels,datasets:[{data,borderColor:color,backgroundColor:color+'22',tension:0.4,fill:true,pointBackgroundColor:color,pointRadius:4,pointHoverRadius:6}]},
+    options:{...chartDefaults, scales:{...chartDefaults.scales, y:{...chartDefaults.scales.y, min, max}}}
+  });
+}
+function makeBarChart(id, labels, data, color) {
+  return new Chart(document.getElementById(id), {
+    type:'bar',
+    data:{labels,datasets:[{data,backgroundColor:color+'99',borderColor:color,borderRadius:6,borderWidth:2}]},
+    options:chartDefaults
+  });
 }
 
-// ── UTIL ──
+// ── UTILS ──
 function showMsg(id, text, type) {
   const el = document.getElementById(id);
+  if(!el) return;
   el.textContent = text;
-  el.className = 'msg ' + type;
-  setTimeout(() => { el.className = 'msg'; }, 4000);
+  el.className = 'msg '+(type||'');
+  if(type) setTimeout(()=>{el.className='msg';},4000);
 }
-
-// ── INIT ──
-loadDashboard();
-populateUserSelects();
+function showToast(text) {
+  const t = document.getElementById('toast');
+  t.textContent = text;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+function updatePoints() {
+  document.querySelector('.nav-points') && (document.querySelector('.nav-points').textContent = '⭐ '+currentUser.total_points+' pts');
+}
 </script>
 </body>
 </html>
