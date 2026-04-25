@@ -11,7 +11,7 @@ A database-driven mental health tracking application designed to store and analy
 
 ## Overview
 
-MindLedger enables users to log and monitor key aspects of mental health, including mood, sleep, activities, and gratitude entries. The system uses a relational database to organize this data and supports querying for meaningful insights into behavioral patterns.
+MindBloom enables users to log and monitor key aspects of mental health, including mood, sleep, activities, and gratitude entries. The system uses a relational database to organize this data and supports querying for meaningful insights into behavioral patterns.
 
 ---
 
